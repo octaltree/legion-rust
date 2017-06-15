@@ -1,0 +1,6 @@
+[package]
+name = "legion-rust"
+version = "0.1.0"
+authors = ["octaltree <octaltree@gmail.com>"]
+
+[dependencies]
