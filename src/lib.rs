@@ -2,6 +2,9 @@ extern crate time;
 extern crate crypto;
 extern crate serde_json;
 
+use crypto::digest::Digest;
+use crypto::sha2::Sha256;
+
 #[derive(PartialEq, Eq, Debug)]
 pub struct Block {
     index: i32,
@@ -23,7 +26,6 @@ pub struct BlockArgs {
 
 impl Block {
     fn calculate_hash(&self) -> String {
-        // TODO
         let &Block {
             ref index,
             ref prev_hash,
@@ -31,11 +33,16 @@ impl Block {
             ref data,
             ..
         } = self;
-        [index.to_string(),
-         prev_hash.to_string(),
-         timestamp.to_string(),
-         data.to_string()]
-                .join("")
+        let s = [index.to_string(),
+                 prev_hash.to_string(),
+                 timestamp.to_string(),
+                 data.to_string()]
+                .join("");
+        {
+            let mut digest = Sha256::new();
+            digest.input_str(&s);
+            digest.result_str()
+        }
     }
     fn add_hash(self) -> Self {
         let h = self.calculate_hash();
