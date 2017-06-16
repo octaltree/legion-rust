@@ -1,3 +1,3 @@
 all:
 	cargo check
-	cargo test
+	cargo test -- --nocapture
