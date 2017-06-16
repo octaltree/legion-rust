@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["octaltree <octaltree@gmail.com>"]
 
 [dependencies]
+
+[[bin]]
+name = "legion-rust"
+doc = false
