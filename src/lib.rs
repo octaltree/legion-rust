@@ -6,7 +6,7 @@ extern crate serde_derive;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Debug, Clone)]
 pub struct Block {
     index: i32,
     prev_hash: String,
@@ -92,6 +92,14 @@ pub fn is_valid_chain(chain: &Chain) -> bool {
                    let (pr, ne): (&Block, &Block) = p;
                    ne.is_next_of(pr)
                })
+    }
+}
+
+pub fn newer_chain(current: &Chain, attempt: &Chain) -> Chain {
+    if is_valid_chain(attempt) && attempt.len() > current.len() {
+        attempt.to_vec()
+    } else {
+        current.to_vec()
     }
 }
 
