@@ -1,8 +1,12 @@
+extern crate time;
+extern crate crypto;
+extern crate serde_json;
+
 #[derive(PartialEq, Eq, Debug)]
 pub struct Block {
     index: i32,
     prev_hash: String,
-    timestamp: i32,
+    timestamp: i64,
     data: String,
     hash: String,
 }
@@ -11,10 +15,27 @@ pub struct BlockArgs {
     body: String,
 }
 
+// TODO
+//instance ToJSON BlockArgs
+//instance FromJSON BlockArgs
+//instance Binary Block
+//instance Out Block
+
 impl Block {
     fn calculate_hash(&self) -> String {
         // TODO
-        [self.index.to_string()].join("")
+        let &Block {
+            ref index,
+            ref prev_hash,
+            ref timestamp,
+            ref data,
+            ..
+        } = self;
+        [index.to_string(),
+         prev_hash.to_string(),
+         timestamp.to_string(),
+         data.to_string()]
+                .join("")
     }
     fn add_hash(self) -> Self {
         let h = self.calculate_hash();
@@ -25,7 +46,7 @@ impl Block {
         self.hash == self.calculate_hash()
     }
     fn create_next(&self, data: &str) -> Block {
-        let time: i32 = 0; // TODO
+        let time: i64 = time::now().to_timespec().sec;
         let &Block {
             ref index,
             ref hash,
@@ -73,7 +94,6 @@ mod tests {
     use super::*;
     #[test]
     fn t_is_valid_chain() {
-        // TODO
         assert_eq!(is_valid_chain(&vec![]), true);
         assert_eq!(is_valid_chain(&vec![Block {
                                            index: 0,
@@ -86,5 +106,6 @@ mod tests {
         let b = initial_block();
         let n = b.create_next("asdf");
         assert_eq!(is_valid_chain(&vec![b, n]), true);
+        // TODO false at length more than 2
     }
 }
