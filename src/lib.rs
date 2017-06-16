@@ -14,6 +14,7 @@ pub struct Block {
     data: String,
     hash: String,
 }
+type Chain = Vec<Block>;
 #[derive(PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct BlockArgs {
     body: String,
@@ -24,6 +25,16 @@ pub struct BlockArgs {
 //instance Out Block
 
 impl Block {
+    fn new() -> Self {
+        let b = Block {
+            index: 0,
+            prev_hash: String::from("0"),
+            timestamp: 0,
+            data: String::from("initial data"),
+            hash: String::new(),
+        };
+        b.add_hash()
+    }
     fn calculate_hash(&self) -> String {
         let &Block {
             ref index,
@@ -69,30 +80,19 @@ impl Block {
     }
 }
 
-pub fn is_valid_chain(chain: &Vec<Block>) -> bool {
+pub fn is_valid_chain(chain: &Chain) -> bool {
     if chain.len() == 0 {
         true
     } else if chain.len() == 1 {
-        chain.iter().next().unwrap() == &initial_block()
+        chain.iter().next().unwrap() == &Block::new()
     } else {
         let mut ps = chain.iter().zip(chain.iter().skip(1));
-        chain.iter().next().unwrap() == &initial_block() &&
+        chain.iter().next().unwrap() == &Block::new() &&
         ps.all(|p| {
                    let (pr, ne): (&Block, &Block) = p;
                    ne.is_next_of(pr)
                })
     }
-}
-
-pub fn initial_block() -> Block {
-    let b = Block {
-        index: 0,
-        prev_hash: String::from("0"),
-        timestamp: 0,
-        data: String::from("initial data"),
-        hash: String::new(),
-    };
-    b.add_hash()
 }
 
 #[cfg(test)]
@@ -109,7 +109,7 @@ mod tests {
                                            hash: String::from(""),
                                        }]),
                    false);
-        let b = initial_block();
+        let b = Block::new();
         let n = b.create_next("asdf");
         assert_eq!(is_valid_chain(&vec![b, n]), true);
         // TODO false at length more than 2
