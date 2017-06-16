@@ -1,6 +1,7 @@
 extern crate time;
 extern crate crypto;
-extern crate serde_json;
+#[macro_use]
+extern crate serde_derive;
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
@@ -13,14 +14,12 @@ pub struct Block {
     data: String,
     hash: String,
 }
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct BlockArgs {
     body: String,
 }
 
 // TODO
-//instance ToJSON BlockArgs
-//instance FromJSON BlockArgs
 //instance Binary Block
 //instance Out Block
 
