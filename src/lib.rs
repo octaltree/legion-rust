@@ -24,6 +24,22 @@ impl Block {
         prev.index + 1 == self.index && prev.hash == self.prev_hash &&
         self.hash == self.calculate_hash()
     }
+    fn create_next(&self, data: &str) -> Block {
+        let time: i32 = 0; // TODO
+        let &Block {
+            ref index,
+            ref hash,
+            ..
+        } = self;
+        Block {
+                index: index + 1,
+                prev_hash: hash.to_string(),
+                timestamp: time,
+                data: data.to_string(),
+                hash: String::new(),
+            }
+            .add_hash()
+    }
 }
 
 pub fn is_valid_chain(chain: &Vec<Block>) -> bool {
@@ -67,6 +83,8 @@ mod tests {
                                            hash: String::from(""),
                                        }]),
                    false);
-        assert_eq!(is_valid_chain(&vec![initial_block()]), true);
+        let b = initial_block();
+        let n = b.create_next("asdf");
+        assert_eq!(is_valid_chain(&vec![b, n]), true);
     }
 }
