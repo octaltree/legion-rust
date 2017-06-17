@@ -95,11 +95,25 @@ pub fn is_valid_chain(chain: &Chain) -> bool {
     }
 }
 
-pub fn newer_chain(current: &Chain, attempt: &Chain) -> Chain {
-    if is_valid_chain(attempt) && attempt.len() > current.len() {
+pub fn is_newer_than(attempt: &Chain, current: &Chain) -> bool {
+    return is_valid_chain(attempt) && attempt.len() > current.len();
+}
+
+pub fn newer_chain(attempt: &Chain, current: &Chain) -> Chain {
+    if is_newer_than(attempt, current) {
         attempt.to_vec()
     } else {
         current.to_vec()
+    }
+}
+
+pub fn append(c: &Chain, b: Block) -> Option<Chain> {
+    if c.last().map(|l| b.is_next_of(l)) == Some(true) {
+        let mut tmp: Chain = c.to_vec();
+        tmp.push(b);
+        Some(tmp)
+    } else {
+        None
     }
 }
 
