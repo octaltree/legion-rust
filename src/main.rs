@@ -1,4 +1,5 @@
 extern crate legion;
+extern crate getopts;
 
 use legion::*;
 
