@@ -25,7 +25,7 @@ pub struct BlockArgs {
 //instance Out Block
 
 impl Block {
-    fn new() -> Self {
+    pub fn new() -> Self {
         let b = Block {
             index: 0,
             prev_hash: String::from("0"),
@@ -35,7 +35,7 @@ impl Block {
         };
         b.add_hash()
     }
-    fn calculate_hash(&self) -> String {
+    pub fn calculate_hash(&self) -> String {
         let &Block {
             ref index,
             ref prev_hash,
@@ -54,15 +54,15 @@ impl Block {
             digest.result_str()
         }
     }
-    fn add_hash(self) -> Self {
+    pub fn add_hash(self) -> Self {
         let h = self.calculate_hash();
         Block { hash: h, ..self }
     }
-    fn is_next_of(&self, prev: &Self) -> bool {
+    pub fn is_next_of(&self, prev: &Self) -> bool {
         prev.index + 1 == self.index && prev.hash == self.prev_hash &&
         self.hash == self.calculate_hash()
     }
-    fn create_next(&self, data: &str) -> Block {
+    pub fn create_next(&self, data: &str) -> Block {
         let time: i64 = time::now().to_timespec().sec;
         let &Block {
             ref index,
