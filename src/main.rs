@@ -1,9 +1,12 @@
 extern crate legion;
 extern crate getopts;
+extern crate iron;
 
 use legion::*;
 use std::env;
 use getopts::Options;
+use iron::prelude::*;
+use iron::status;
 
 enum MySession {
     EmptySession,
@@ -40,9 +43,16 @@ fn print_usage(program: &str, opts: Options) {
     print!("{}", opts.usage(&brief));
 }
 
+fn serve_http(port: String) {
+    Iron::new(|_: &mut Request| Ok(Response::with((status::Ok, "Hello world!"))))
+        .http(format!("localhost:{}", port))
+        .unwrap();
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let program = args.iter().next().unwrap();
     let opts = cliopts_parser().parse(&args[1..]).unwrap(); // TODO err message
     print_usage(program, cliopts_parser());
+    serve_http(opts.opt_str("s").unwrap_or("8000".to_owned()))
 }
