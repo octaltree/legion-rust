@@ -1,5 +1,5 @@
 [package]
-name = "legion-rust"
+name = "legion"
 version = "0.1.0"
 authors = ["octaltree <octaltree@gmail.com>"]
 
