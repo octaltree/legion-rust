@@ -10,6 +10,8 @@ serde = "1.0"
 serde_derive = "1.0"
 #serde_json = "1.0"
 getopts = "0.2.4"
+crust = "0.26.0"
+iron = "*"
 
 [lib]
 name = "legion"
